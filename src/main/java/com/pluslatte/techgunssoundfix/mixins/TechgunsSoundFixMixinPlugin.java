@@ -16,7 +16,7 @@ import java.util.Map;
 public class TechgunsSoundFixMixinPlugin implements IFMLLoadingPlugin {
 
     public TechgunsSoundFixMixinPlugin() {
-        Mixins.addConfiguration("mixins.techgunssoundfix.json");
+        // Don't add mixin configuration here - MixinBootstrap hasn't been initialized yet
     }
 
     @Override
@@ -36,6 +36,8 @@ public class TechgunsSoundFixMixinPlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
+        // Add mixin configuration here after MixinBootstrap has been initialized
+        Mixins.addConfiguration("mixins.techgunssoundfix.json");
     }
 
     @Override
