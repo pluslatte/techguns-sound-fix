@@ -26,7 +26,7 @@ Minecraftの座標系に合わせます。
 - **依存MOD**: 
   - Techguns（任意のバージョン）
   - UniMixins または GTNHMixins（実行時に必須）
-- **Mixinライブラリ**: GTNHMixins（開発時の依存関係）
+- **Mixinライブラリ**: Mixin 0.8.5（SpongePowered、コンパイル時のみ）
 
 ## ビルド方法
 

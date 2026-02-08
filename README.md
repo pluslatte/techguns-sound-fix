@@ -19,7 +19,7 @@ This mod uses **UniMixins** to patch the angle parameter in the `polarOffsetXZ` 
 - **Dependencies**: 
   - Techguns (any version)
   - UniMixins or GTNHMixins (required at runtime)
-- **Mixin Library**: GTNHMixins (development dependency)
+- **Mixin Library**: Mixin 0.8.5 (SpongePowered, compile-only)
 
 ## Installation
 

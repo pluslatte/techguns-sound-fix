@@ -49,14 +49,16 @@ repositories {
         name = "GTNH"
         url = "https://nexus.gtnewhorizons.com/repository/public/"
     }
+    maven {
+        name = "SpongePowered"
+        url = "https://repo.spongepowered.org/maven"
+    }
 }
 
 dependencies {
-    // UniMix for mixin support in 1.7.10
-    // Note: UniMix classes are provided at runtime by the UniMixins mod
-    // The Mixin library must be available at compile time but is provided at runtime
-    // Users need to install UniMixins mod separately: https://modrinth.com/mod/unimixins
-    compileOnly("com.github.GTNewHorizons:gtnhmixins:2.2.1:dev")
+    // Mixin for compile-time only - provided at runtime by UniMixins mod
+    // Using the Mixin library directly from SpongePowered
+    compileOnly("org.spongepowered:mixin:0.8.5")
     
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..

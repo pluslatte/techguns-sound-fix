@@ -81,7 +81,7 @@ src/main/
 
 - **Minecraft**: 1.7.10
 - **Forge**: 10.13.4.1614-1.7.10
-- **GTNHMixins**: 2.2.1+ (compile-only dependency, provides Mixin framework)
+- **Mixin**: 0.8.5 (compile-only, from SpongePowered)
 - **UniMixins/GTNHMixins**: Required at runtime (users must install separately)
 - **Techguns**: Runtime dependency (not required for compilation)
 
