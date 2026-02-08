@@ -1,37 +1,58 @@
-# anatawa12's ForgeGradle 1.2 fork for Gradle 4.4.1+ - example project
+# Techguns Audio Fix
 
-This is an example mod using the [fork of ForgeGradle-1.2 made by anatawa12](https://github.com/anatawa12/ForgeGradle-1.2).
-This fork supports Gradle 4.4.1 and later. This example project uses Gradle 5.6.4.
+A Minecraft 1.7.10 mod that fixes the gun sound position offset issue in Techguns MOD where sounds are shifted to the left.
 
-## How to use this example project
+[日本語READMEはこちら / Japanese README](README_JP.md)
 
-You can download this example project from [here](https://github.com/anatawa12/ForgeGradle-example/archive/master.zip), or use it as a template on Github.
-This project can be used as a replacement for Forge's 1.7.10 MDK.
+## Problem
 
-## How to replace ForgeGradle 1.2. with anatawa12's fork
-Although this example project has some differences to Forge's 1.7.10 MDK, anatawa12's fork of ForgeGradle 1.2 can be used by most projects with only minimal changes to their Gradle build script.
+In Techguns MOD, gun firing sounds appear to come from the left of the actual gun position due to a coordinate system mismatch in the `TGSound` class's `polarOffsetXZ` calculation.
 
-Here is a list of changes to Forge's 1.7.10 MDK Gradle build script, to replace the official ForgeGradle 1.2 plugin with the fork. These changes are likely to work with most projects based on Forge's 1.7.10 MDK.
+## Solution
 
-In the repositories block of the buildscript section, add jcenter, and switch the Forge maven to use HTTPS instead of HTTP:
-```diff
-     repositories {
-         mavenCentral()
-         maven {
-             name = "forge"
--            url = "http://files.minecraftforge.net/maven"
-+            url = "https://maven.minecraftforge.net/"
-         }
+This mod uses **UniMixins** to patch the angle parameter in the `polarOffsetXZ` call, subtracting π/2 (90 degrees) to align with Minecraft's coordinate system.
+
+## Technical Details
+
+- **Minecraft**: 1.7.10
+- **Forge**: 10.13.4.1614-1.7.10
+- **Dependencies**: Techguns (any version)
+- **Mixin Library**: UniMix 0.15.5
+
+## Installation
+
+1. Download the latest release from [Releases](https://github.com/pluslatte/techguns-sound-fix/releases)
+2. Place `techgunsfix-1.0.0.jar` in your Minecraft `mods` folder
+3. Ensure Techguns MOD is also installed
+4. Launch Minecraft
+
+## Building from Source
+
+```bash
+git clone https://github.com/pluslatte/techguns-sound-fix.git
+cd techguns-sound-fix
+./gradlew build
 ```
 
-Also in the dependencies block of the buildscript section, change the dependency on Forge's official ForgeGradle 1.2 to the fork:
-```diff
-     dependencies {
--        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-+        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {
-+            changing = true
-+        }
-     }
-```
+The built JAR will be in `build/libs/`
 
-The Gradle wrapper should also be changed to use Gradle 4.4.1 or higher. <!--Currently, the plugin [does not support Gradle 6.x](https://github.com/anatawa12/ForgeGradle-1.2/issues/9), although this may change in the future. As such, the latest version of Gradle this plugin supports is Gradle 5.6.4.-->
+## How It Works
+
+The mod uses a Mixin to intercept the `MathUtil.polarOffsetXZ` call in `TGSound`'s constructor and modifies the angle parameter to correct the coordinate system mismatch between Minecraft's yaw angles and mathematical polar coordinates.
+
+### Implementation
+
+- **@ModifyArg** on `polarOffsetXZ` call (4th parameter - angle)
+- **Correction**: `angle - Math.PI / 2.0`
+- **Target**: `techguns.client.audio.TGSound` constructor
+
+## License
+
+This project follows FML and Minecraft Forge licensing. See `LICENSE-fml.txt` and `MinecraftForge-License.txt` for details.
+
+## Credits
+
+- **Developer**: pluslatte
+- **Mixin Library**: [UniMix by LegacyModdingMC](https://github.com/LegacyModdingMC/UniMix)
+- **Forge**: MinecraftForge Team
+

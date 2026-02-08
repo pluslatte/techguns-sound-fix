@@ -9,6 +9,10 @@ buildscript {
             name = "CleanroomMC"
             url = "https://maven.cleanroommc.com"
         }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
     dependencies {
         classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {

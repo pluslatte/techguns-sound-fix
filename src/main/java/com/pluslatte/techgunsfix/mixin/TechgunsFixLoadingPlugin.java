@@ -1,10 +1,7 @@
 package com.pluslatte.techgunsfix.mixin;
 
-import com.gtnewhorizon.gtnhlib.config.ConfigException;
-import com.gtnewhorizon.gtnhlib.config.ConfigurationManager;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.Map;
@@ -17,7 +14,6 @@ public class TechgunsFixLoadingPlugin implements IFMLLoadingPlugin {
         // Initialize Mixin
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.techgunsfix.json");
-        MixinEnvironment.getDefaultEnvironment().setSide(MixinEnvironment.Side.CLIENT);
     }
 
     @Override

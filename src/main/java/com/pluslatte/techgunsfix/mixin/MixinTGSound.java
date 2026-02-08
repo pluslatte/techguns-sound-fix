@@ -2,7 +2,7 @@ package com.pluslatte.techgunsfix.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 /**
  * Mixin to fix the Techguns gun sound position offset issue.
@@ -14,31 +14,30 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  * 
  * This causes sounds to be shifted to the left by 90 degrees.
  * 
- * The fix: Subtract π/2 (90 degrees) from the angle before it's used
- * in the polarOffsetXZ calculation to align with Minecraft's coordinate system.
+ * The fix: Subtract π/2 (90 degrees) from the angle parameter before calling polarOffsetXZ
+ * to align with Minecraft's coordinate system.
  */
 @Mixin(targets = "techguns.client.audio.TGSound", remap = false)
 public class MixinTGSound {
     
     /**
-     * Modifies the angle parameter before it's passed to MathUtil.polarOffsetXZ.
+     * Modifies the angle argument (4th parameter) passed to polarOffsetXZ.
      * This corrects the coordinate system mismatch between Minecraft yaw angles
      * and mathematical polar coordinates.
      * 
-     * The injection point is right before the polarOffsetXZ method is invoked
-     * in the TGSound constructor.
+     * The injection point is the polarOffsetXZ method invocation in the TGSound constructor.
      * 
      * @param angle The original angle calculated from entity yaw
      * @return The corrected angle (original - π/2)
      */
-    @ModifyVariable(
+    @ModifyArg(
         method = "<init>(Ljava/lang/String;Lnet/minecraft/entity/Entity;FFZZZLtechguns/client/audio/TGSoundCategory;)V",
         at = @At(
             value = "INVOKE",
             target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;",
             remap = false
         ),
-        ordinal = 0,
+        index = 3,
         remap = false
     )
     private double fixGunSoundAngle(double angle) {
