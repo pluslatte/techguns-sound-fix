@@ -15,42 +15,49 @@ import techguns.util.MathUtil;
  * The problem: Minecraft's coordinate system and mathematical polar coordinates
  * have different angle orientations:
  * - Minecraft: yaw=0°=South (+Z), -90°=East (+X)
- * - Polar coordinates: angle=0°=East (+X), 90°=North (+Z)
+ * - Polar coordinates: angle=0°=East (+X), 90°=South (+Z)
  * 
- * This mixin adjusts the yaw angle calculation to correct the sound position.
+ * The polarOffsetXZ method calculates:
+ * - new_x = x + radius * cos(angle)
+ * - new_z = z + radius * sin(angle)
+ * 
+ * For standard polar coordinates:
+ * - angle=0° → (+X direction, East)
+ * - angle=90° → (+Z direction, South)
+ * 
+ * For Minecraft:
+ * - yaw=0° → South (+Z)
+ * - yaw=-90° → East (+X)
+ * - yaw=180° → North (-Z)
+ * - yaw=90° → West (-X)
+ * 
+ * Conversion formula: polar_angle = -minecraft_yaw + 90°
+ * In radians: angle = -yaw_radians + π/2 = π/2 - yaw_radians
+ * 
+ * This mixin adjusts the yaw angle calculation to correct the sound position
+ * in both the constructor and update method.
  */
 @Mixin(value = TGSound.class, remap = false)
 public abstract class MixinTGSound {
 
     /**
-     * Modifies the yaw angle passed to polarOffsetXZ to correct the coordinate
-     * system mismatch.
-     * 
-     * The polarOffsetXZ function is called in TGSound.func_73660_a (update method):
-     * MathUtil.Vec2 pos = MathUtil.polarOffsetXZ(
-     * (double)this.xPosF,
-     * (double)this.zPosF,
-     * 1.0,
-     * (double)((EntityLivingBase)entity).renderYawOffset * Math.PI / 180.0
-     * );
-     * 
-     * We need to adjust the angle to account for:
-     * 1. Minecraft uses South as 0°, while polar coordinates use East as 0° (90°
-     * difference)
-     * 2. Minecraft rotates clockwise (negative), while polar coordinates rotate
-     * counter-clockwise (positive)
-     * 
-     * The transformation: adjusted_angle = -(yaw - 90°) = -yaw + 90° = 90° - yaw
-     * In radians: adjusted_angle = π/2 - yaw_radians
+     * Redirects polarOffsetXZ calls in the update method (func_73660_a) to fix
+     * angle.
      */
     @Redirect(method = "func_73660_a", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
-    private MathUtil.Vec2 redirectPolarOffsetXZ(double x, double z, double radius, double angle) {
-        // Adjust the angle to convert from Minecraft coordinates to polar coordinates
-        // Original: yaw * PI / 180
-        // Fixed: (90 - yaw) * PI / 180 = PI/2 - yaw * PI / 180
+    private MathUtil.Vec2 redirectPolarOffsetXZInUpdate(double x, double z, double radius, double angle) {
+        // Adjust angle: π/2 - yaw_radians
         double adjustedAngle = (Math.PI / 2.0) - angle;
+        return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
+    }
 
-        // Call the original method with the corrected angle
+    /**
+     * Redirects polarOffsetXZ calls in the constructor to fix angle.
+     */
+    @Redirect(method = "<init>(Ljava/lang/String;Lnet/minecraft/entity/Entity;FFZZZLtechguns/client/audio/TGSoundCategory;)V", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
+    private MathUtil.Vec2 redirectPolarOffsetXZInConstructor(double x, double z, double radius, double angle) {
+        // Adjust angle: π/2 - yaw_radians
+        double adjustedAngle = (Math.PI / 2.0) - angle;
         return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
     }
 }
