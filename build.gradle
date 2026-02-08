@@ -86,10 +86,13 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-// Add the MANIFEST.MF to the JAR
+// Add the MANIFEST.MF entries to the JAR
 jar {
     manifest {
-        from file("${sourceSets.main.output.resourcesDir}/META-INF/MANIFEST.MF")
+        attributes(
+            'FMLCorePlugin': 'com.pluslatte.techgunsfix.mixin.TechgunsFixLoadingPlugin',
+            'FMLCorePluginContainsFMLMod': 'true'
+        )
     }
 }
 
