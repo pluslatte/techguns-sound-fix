@@ -1,103 +1,58 @@
-# Techguns Sound Fix MOD - プロジェクト完成報告
+# Techguns Sound Fix MOD - プロジェクト概要
 
 ## 概要
 
-Minecraft 1.7.10のTechguns MODの銃の射撃音が左に偏って聞こえる問題を修正するMixinベースのパッチMODを作成しました。
+Minecraft 1.7.10のTechguns MODの銃の射撃音が左に偏って聞こえる問題を修正するMixinベースのパッチMODです。
 
-## 作成されたファイル
+## 主要ファイル
 
-### 1. Gradle設定ファイル
+### Gradle設定
 
-#### [build.gradle](build.gradle)
+- **build.gradle**: UniMixins依存関係、Mixin annotation processor設定、Techguns MODの参照（`libs/`ディレクトリから）
+- **gradle.properties**: MOD ID、バージョン、グループ設定
 
-- UniMixins 0.2.1の依存関係を追加
-- JitPackリポジトリを追加
-- Mixinアノテーションプロセッサの設定
-- JAR生成時のMANIFEST属性設定
+### Javaソースコード
 
-#### [gradle.properties](gradle.properties)
+#### MixinTGSound.java
 
-- MOD ID: `techgunssoundfix`
-- バージョン: 1.0.0
-- グループ: `com.pluslatte.techgunssoundfix`
-
-### 2. JavaソースファイルJavaソースファイル
-
-#### [TechgunsSoundFix.java](src/main/java/com/pluslatte/techgunssoundfix/TechgunsSoundFix.java)
-
-メインMODクラス
-
-- MOD IDの定義
-- ロギング設定
-- FMLイベントハンドラー
-
-#### [MixinTGSound.java](src/main/java/com/pluslatte/techgunssoundfix/mixins/MixinTGSound.java)
-
-**最も重要なファイル - TGSoundへのMixin実装**
+**TGSoundへのMixin実装（メインの修正コード）**
 
 ```java
-@Mixin(targets = "techguns.client.audio.TGSound", remap = false)
+@Mixin(value = TGSound.class, remap = false)
 public abstract class MixinTGSound {
-    @Redirect(
-        method = "update",
-        at = @At(
-            value = "INVOKE",
-            target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;",
-            remap = false
-        )
-    )
-    private Object redirectPolarOffsetXZ(double x, double z, double radius, double angle) {
-        // 角度を修正: π/2 - yaw_radians
-        double adjustedAngle = (Math.PI / 2.0) - angle;
-        // 修正された角度で元のメソッドを呼び出し
-        // ...
+    @Redirect(method = "func_73660_a",
+              at = @At(value = "INVOKE",
+                       target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;",
+                       remap = false),
+              remap = false)
+    private MathUtil.Vec2 redirectPolarOffsetXZInUpdate(double x, double z, double radius, double angle) {
+        // 角度を修正: yaw + π/2
+        double adjustedAngle = angle + (Math.PI / 2.0);
+        return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
     }
 }
 ```
 
 **修正内容:**
 
-- `@Redirect`を使用して`MathUtil.polarOffsetXZ()`の呼び出しをインターセプト
-- Minecraft座標系から極座標系への変換式を適用: `adjusted_angle = π/2 - angle`
-- リフレクションを使用して修正された角度で元のメソッドを呼び出し
+- `@Redirect`で`MathUtil.polarOffsetXZ()`の呼び出しをインターセプト
+- 角度パラメータに π/2 を加算して、Minecraft座標系から極座標系に正しく変換
 
-#### [TechgunsSoundFixMixinPlugin.java](src/main/java/com/pluslatte/techgunssoundfix/mixins/TechgunsSoundFixMixinPlugin.java)
+#### その他のファイル
 
-Mixinプラグインローダー
+- **TechgunsSoundFix.java**: メインMODクラス
+- **TechgunsSoundFixMixinPlugin.java**: FML Core Plugin（早期Mixin適用）
+- **TechgunsSoundFixLateMixinLoader.java**: Late Mixin Loader
 
-- `IFMLLoadingPlugin`を実装
-- Mixinの初期化とコンフィグの登録
-- 早期起動でMixinを適用
+### リソースファイル
 
-### 3. リソースファイル
+- **mixins.techgunssoundfix.json**: Mixin設定
+- **mcmod.info**: MOD情報
+- **META-INF/MANIFEST.MF**: Core Plugin指定
 
-#### [mixins.techgunssoundfix.json](src/main/resources/mixins.techgunssoundfix.json)
+## ビルド要件
 
-Mixin設定ファイル
-
-```json
-{
-  "required": true,
-  "minVersion": "0.8",
-  "package": "com.pluslatte.techgunssoundfix.mixins",
-  "refmap": "mixins.techgunssoundfix.refmap.json",
-  "mixins": ["MixinTGSound"]
-}
-```
-
-#### [mcmod.info](src/main/resources/mcmod.info)
-
-MOD情報ファイル
-
-- MOD名、説明、バージョン
-- 依存関係: `required-after:techguns`
-
-#### [META-INF/MANIFEST.MF](src/main/resources/META-INF/MANIFEST.MF)
-
-マニフェストファイル
-
-- FMLCorePluginの指定
-- FMLCorePluginContainsFMLMod: true
+**重要:** `libs/`ディレクトリにTechguns MODのJARファイルが必要です。これがないとコンパイルエラーになります。
 
 ### 4. ドキュメントファイル
 

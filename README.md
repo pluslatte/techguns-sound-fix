@@ -1,33 +1,18 @@
 # Techguns Sound Fix Mod
 
-A Mixin-based patch mod that fixes the gun shooting sound positioning issue in the Techguns mod for Minecraft 1.7.10.
+Fixes the gun shooting sound positioning issue in Techguns mod for Minecraft 1.7.10.
 
-## Problem Overview
+## Problem
 
-In the Techguns mod, gun shooting sounds are incorrectly positioned and always sound like they're coming from the left side of the player.
-
-## Root Cause
-
-The issue occurs in the `TGSound.class` when using the `polarOffsetXZ` function to calculate sound source positions. The problem stems from a mismatch between Minecraft's coordinate system and mathematical polar coordinates:
-
-**Coordinate System Differences:**
-
-- Minecraft: yaw=0°=South (+Z), -90°=East (+X)
-- Polar coordinates: angle=0°=East (+X), 90°=North (+Z)
+Gun sounds in Techguns mod are mispositioned and always sound from the left side.
 
 ## Solution
 
-This mod uses UniMixins to apply a Mixin to the `TGSound` class, correcting the angle passed to the `polarOffsetXZ` function.
+This mod uses UniMixins to apply a Mixin to `TGSound` class, correcting the angle calculation for proper sound positioning.
 
-**Fix Formula:** `adjusted_angle = π/2 - yaw_radians`
+**Fix:** `adjusted_angle = yaw + π/2`
 
-This ensures proper conversion from Minecraft's coordinate system to polar coordinates.
-
-## Installation
-
-1. Install UniMixins mod
-2. Place this mod (techgunssoundfix) in your mods folder
-3. Use together with Techguns mod
+This converts Minecraft's coordinate system to polar coordinates correctly.
 
 ## Requirements
 
@@ -36,36 +21,31 @@ This ensures proper conversion from Minecraft's coordinate system to polar coord
 - UniMixins 0.2.1 or later
 - Techguns mod
 
+## Installation
+
+1. Install UniMixins mod
+2. Place this mod in your mods folder
+3. Place Techguns mod in your mods folder
+
 ## Building
+
+**IMPORTANT:** You need Techguns mod JAR file in the `libs/` directory to build this mod.
+
+1. Download Techguns mod JAR and place it in `libs/` folder
+2. Run:
 
 ```bash
 ./gradlew build
 ```
 
-The built JAR file will be in `build/libs/`.
+The built JAR will be in `build/libs/`.
 
 ## Technical Details
 
-### Mixin Target
-
-- Class: `techguns.client.audio.TGSound`
-- Method: `update()`
-- Target: Call to `MathUtil.polarOffsetXZ()`
-
-### Implementation
-
-Uses `@Redirect` annotation to intercept the `polarOffsetXZ` method call, corrects the angle parameter, and then invokes the original method.
-
-## License
-
-This project was created as a patch to fix an audio bug in the Techguns mod.
-
-## Credits
-
-- Techguns mod author
-- UniMixins development team
-- Mixin framework (SpongePowered)
+- **Target:** `techguns.client.audio.TGSound.update()`
+- **Method:** `@Redirect` on `MathUtil.polarOffsetXZ()` call
+- **Fix:** Adds π/2 to angle parameter
 
 ---
 
-[日本語版READMEはこちら](README_JP.md)
+[日本語版README](README_JP.md)

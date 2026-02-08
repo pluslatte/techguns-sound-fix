@@ -55,21 +55,20 @@ this.field_147658_f = (float)pos.y;
 
 Minecraftのyawから極座標のangleへの変換:
 
-1. Minecraftは南を0°としているが、極座標は東を0°としている → 90°のオフセット
-2. Minecraftは時計回り（負の方向）、極座標は反時計回り（正の方向） → 符号を反転
+Minecraftは南を0°としているが、極座標は東を0°としている → 90°のオフセット
 
 変換式:
 
 ```
-極座標angle = 90° - Minecraft yaw
-           = π/2 - yaw_radians
+極座標angle = Minecraft yaw + 90°
+           = yaw_radians + π/2
 ```
 
 ### Mixinの実装
 
 ```java
 @Redirect(
-    method = "update",
+    method = "func_73660_a",  // update()
     at = @At(
         value = "INVOKE",
         target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;",
@@ -78,12 +77,10 @@ Minecraftのyawから極座標のangleへの変換:
     remap = false,
     require = 1
 )
-private Object redirectPolarOffsetXZ(double x, double z, double radius, double angle) {
-    // 角度を修正: π/2 - yaw_radians
-    double adjustedAngle = (Math.PI / 2.0) - angle;
-
-    // 修正された角度で元のメソッドを呼び出し
-    // ... (リフレクションを使用した呼び出し)
+private MathUtil.Vec2 redirectPolarOffsetXZInUpdate(double x, double z, double radius, double angle) {
+    // 角度を修正: yaw + π/2
+    double adjustedAngle = angle + (Math.PI / 2.0);
+    return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
 }
 ```
 
@@ -91,11 +88,14 @@ private Object redirectPolarOffsetXZ(double x, double z, double radius, double a
 
 ### ビルド方法
 
-```bash
-# 依存関係のセットアップ（初回のみ）
-./gradlew setupDecompWorkspace
+**重要:** ビルドには`libs/`ディレクトリにTechguns MODのJARファイルが必要です。
 
-# ビルド
+```bash
+# 1. Techguns MODをlibsフォルダに配置
+mkdir -p libs
+# Techguns MODのJARファイルをlibsにコピー
+
+# 2. ビルド
 ./gradlew build
 ```
 

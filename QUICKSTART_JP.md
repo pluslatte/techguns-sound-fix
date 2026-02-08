@@ -8,14 +8,24 @@
 
 ## ビルド手順
 
-### 1. 初回セットアップ
+### 1. Techguns MODの準備 ★重要★
 
-```bash
-cd /home/sadalsuud/jdk8-dev/techguns-sound-fix
-./gradlew setupDecompWorkspace
+**ビルドにはTechguns MODのJARファイルが必要です。**
+
+1. Techguns MODをダウンロード（CurseForge等から）
+2. プロジェクトルートに`libs/`ディレクトリを作成（存在しない場合）
+3. Techguns MODのJARファイルを`libs/`に配置
+
+例：
+
 ```
-
-このコマンドは初回のみ実行が必要です。MinecraftとForgeの開発環境をセットアップします。
+techguns-sound-fix/
+├── libs/
+│   └── Techguns.beta.1.2_alphatest4.1.jar  ← ここに配置
+├── src/
+├── build.gradle
+└── ...
+```
 
 ### 2. ビルド
 
@@ -23,79 +33,61 @@ cd /home/sadalsuud/jdk8-dev/techguns-sound-fix
 ./gradlew build
 ```
 
-成功すると以下のファイルが生成されます:
+成功すると`build/libs/techgunssoundfix-1.0.0.jar`が生成されます。
 
-- `build/libs/techgunssoundfix-1.0.0.jar` - 実行可能なMODファイル
-- `build/libs/techgunssoundfix-1.0.0-sources.jar` - ソースコード
-- `build/libs/techgunssoundfix-1.0.0-dev.jar` - 開発用
-
-### 3. 開発環境でのテスト（オプション）
-
-```bash
-./gradlew runClient
-```
-
-これにより、MODがロードされた状態でMinecraftクライアントが起動します。
-ただし、Techguns MODは別途インストールする必要があります。
-
-## インストールとテスト
+## インストール方法
 
 ### 必要なMOD
 
 1. **UniMixins** (0.2.1以降)
-   - ダウンロード: https://github.com/LegacyModdingMC/UniMixins/releases
-   - ファイル名の先頭に`+`または`!`が付いているものを選択
-   - 例: `+unimixins-all-1.7.10-0.2.1.jar`
+   - https://github.com/LegacyModdingMC/UniMixins/releases
+   - ファイル名の先頭に`+`が付いているもの（例：`+unimixins-all-1.7.10-0.2.1.jar`）
 
 2. **Techguns MOD**
-   - CurseForge: https://www.curseforge.com/minecraft/mc-mods/techguns
-   - Minecraft 1.7.10対応版をダウンロード
+   - https://www.curseforge.com/minecraft/mc-mods/techguns
+   - Minecraft 1.7.10版
 
 3. **このMOD**
    - `build/libs/techgunssoundfix-1.0.0.jar`
 
 ### インストール手順
 
-1. `.minecraft/mods/`フォルダを開く
-2. 以下のファイルを配置:
-   ```
-   mods/
-   ├── +unimixins-all-1.7.10-0.2.1.jar
-   ├── techguns-[version].jar
-   └── techgunssoundfix-1.0.0.jar
-   ```
-3. Minecraft 1.7.10 (Forge)を起動
-
-### 動作確認
-
-#### 1. 起動確認
-
-Minecraftログ(`logs/fml-client-latest.log`)で以下を確認:
+`.minecraft/mods/`フォルダに以下を配置:
 
 ```
-[INFO] [techgunssoundfix] Techguns Sound Fix loaded - fixing gun sound positioning
+mods/
+├── +unimixins-all-1.7.10-0.2.1.jar
+├── techguns-[version].jar
+└── techgunssoundfix-1.0.0.jar
 ```
 
-#### 2. Mixin適用確認
+Minecraft 1.7.10 (Forge)を起動します。
 
-ログで以下のようなメッセージを探す:
+## 動作確認
+
+### 1. ログ確認
+
+`logs/fml-client-latest.log`で以下を確認:
 
 ```
-[INFO] [mixin] Mixing MixinTGSound from mixins.techgunssoundfix.json into techguns.client.audio.TGSound
+[INFO] [techgunssoundfix] Techguns Sound Fix loaded
+[INFO] [mixin] Mixing MixinTGSound from mixins.techgunssoundfix.json
 ```
 
-#### 3. 音の位置テスト
+### 2. ゲーム内テスト
 
-1. Techgunsの銃を取得
-2. 以下の方向で射撃して音の方向を確認:
-   - **前方**: 音が前から聞こえるか
-   - **後方**: 音が後ろから聞こえるか
-   - **左側**: 音が左から聞こえるか
-   - **右側**: 音が右から聞こえるか
-
-修正前は全ての音が左に偏っていましたが、修正後は正しい方向から聞こえるはずです。
+銃を前後左右に向けて射撃し、音が正しい方向から聞こえることを確認します。
+修正前は全て左から聞こえていましたが、修正後は正しい方向から聞こえます。
 
 ## トラブルシューティング
+
+### ビルドエラー: Techgunsクラスが見つからない
+
+→ `libs/`ディレクトリにTechguns MODのJARファイルを配置してください。
+
+### Mixin適用エラー
+
+→ UniMixins MODが正しくインストールされているか確認してください。
 
 ### ビルドエラー
 

@@ -31,8 +31,8 @@ import techguns.util.MathUtil;
  * - yaw=180° → North (-Z)
  * - yaw=90° → West (-X)
  * 
- * Conversion formula: polar_angle = -minecraft_yaw + 90°
- * In radians: angle = -yaw_radians + π/2 = π/2 - yaw_radians
+ * Conversion formula: polar_angle = minecraft_yaw + 90°
+ * In radians: angle = yaw_radians + π/2
  * 
  * This mixin adjusts the yaw angle calculation to correct the sound position
  * in both the constructor and update method.
@@ -46,8 +46,8 @@ public abstract class MixinTGSound {
      */
     @Redirect(method = "func_73660_a", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
     private MathUtil.Vec2 redirectPolarOffsetXZInUpdate(double x, double z, double radius, double angle) {
-        // Adjust angle: π/2 - yaw_radians
-        double adjustedAngle = (Math.PI / 2.0) - angle;
+        // Adjust angle: yaw_radians + π/2
+        double adjustedAngle = angle + (Math.PI / 2.0);
         return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
     }
 
@@ -56,8 +56,8 @@ public abstract class MixinTGSound {
      */
     @Redirect(method = "<init>(Ljava/lang/String;Lnet/minecraft/entity/Entity;FFZZZLtechguns/client/audio/TGSoundCategory;)V", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
     private MathUtil.Vec2 redirectPolarOffsetXZInConstructor(double x, double z, double radius, double angle) {
-        // Adjust angle: π/2 - yaw_radians
-        double adjustedAngle = (Math.PI / 2.0) - angle;
+        // Adjust angle: yaw_radians + π/2
+        double adjustedAngle = angle + (Math.PI / 2.0);
         return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
     }
 }

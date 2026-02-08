@@ -30,6 +30,7 @@ targetCompatibility = 1.6
 
 version = project.version
 group = project.group
+archivesBaseName = "techgunssoundfix"
 
 minecraft {
     version = project.minecraft_version + "-" + project.forge_version
