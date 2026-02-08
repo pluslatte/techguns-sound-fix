@@ -46,7 +46,7 @@ repositories {
 dependencies {
     // UniMixins dependencies for Mixin support
     def unimixinsVersion = "0.2.1"
-    compile("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${unimixinsVersion}:dev") {
+    implementation("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${unimixinsVersion}:dev") {
         transitive = false
     }
     
