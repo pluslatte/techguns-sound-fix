@@ -53,6 +53,11 @@ dependencies {
         transitive = false
     }
     
+    // MixinBooterLegacy for Late Mixin support
+    compileOnly("com.github.LegacyModdingMC.UniMixins:unimixins-mixinbooterlegacy-1.7.10:${unimixinsVersion}:dev") {
+        transitive = false
+    }
+    
     // Add annotation processor for Mixin refmap generation
     annotationProcessor "org.ow2.asm:asm-debug-all:5.0.3"
     annotationProcessor "com.google.guava:guava:24.1.1-jre"

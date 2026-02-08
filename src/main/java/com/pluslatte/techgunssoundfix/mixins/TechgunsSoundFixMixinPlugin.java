@@ -37,8 +37,9 @@ public class TechgunsSoundFixMixinPlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
-        // Add mixin configuration here after MixinBootstrap has been initialized
-        Mixins.addConfiguration("mixins.techgunssoundfix.json");
+        // Mixin configuration is now loaded as a late mixin via
+        // TechgunsSoundFixLateMixinLoader
+        // This ensures Techguns classes are available before mixin application
     }
 
     @Override
