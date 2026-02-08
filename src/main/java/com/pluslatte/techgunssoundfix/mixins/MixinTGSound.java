@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import techguns.client.audio.TGSound;
+import techguns.util.MathUtil;
 
 /**
  * Mixin to fix TGSound positioning issue in Techguns mod.
@@ -43,20 +44,13 @@ public abstract class MixinTGSound {
      * In radians: adjusted_angle = π/2 - yaw_radians
      */
     @Redirect(method = "func_73660_a", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
-    private Object redirectPolarOffsetXZ(double x, double z, double radius, double angle) {
+    private MathUtil.Vec2 redirectPolarOffsetXZ(double x, double z, double radius, double angle) {
         // Adjust the angle to convert from Minecraft coordinates to polar coordinates
         // Original: yaw * PI / 180
         // Fixed: (90 - yaw) * PI / 180 = PI/2 - yaw * PI / 180
         double adjustedAngle = (Math.PI / 2.0) - angle;
 
         // Call the original method with the corrected angle
-        try {
-            Class<?> mathUtilClass = Class.forName("techguns.util.MathUtil");
-            java.lang.reflect.Method method = mathUtilClass.getDeclaredMethod("polarOffsetXZ",
-                    double.class, double.class, double.class, double.class);
-            return method.invoke(null, x, z, radius, adjustedAngle);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to invoke MathUtil.polarOffsetXZ", e);
-        }
+        return MathUtil.polarOffsetXZ(x, z, radius, adjustedAngle);
     }
 }
