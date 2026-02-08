@@ -5,6 +5,10 @@ buildscript {
             name = "forge"
             url = "https://maven.minecraftforge.net/"
         }
+        maven {
+            name = "jitpack"
+            url = "https://jitpack.io"
+        }
     }
     dependencies {
         classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {
@@ -32,19 +36,27 @@ minecraft {
     runDir = "run"
 }
 
+repositories {
+    maven {
+        name = "jitpack"
+        url = "https://jitpack.io"
+    }
+}
+
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    // UniMixins dependencies for Mixin support
+    def unimixinsVersion = "0.2.1"
+    compile("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${unimixinsVersion}:dev") {
+        transitive = false
+    }
+    
+    // Add annotation processor for Mixin refmap generation
+    annotationProcessor "org.ow2.asm:asm-debug-all:5.0.3"
+    annotationProcessor "com.google.guava:guava:24.1.1-jre"
+    annotationProcessor "com.google.code.gson:gson:2.8.6"
+    annotationProcessor("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${unimixinsVersion}:dev") {
+        transitive = false
+    }
 }
 
 processResources {
@@ -59,9 +71,23 @@ processResources {
     }
 }
 
+// Add manifest to jar
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'com.pluslatte.techgunssoundfix.mixins.TechgunsSoundFixMixinPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 // Ensures that the encoding of source files is set to UTF-8, see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+    // Configure Mixin annotation processor
+    options.compilerArgs += [
+        "-AreobfSrgFile=${tasks.reobf.srg}",
+        "-AoutSrgFile=${project.buildDir}/tmp/mixins.srg",
+        "-AoutRefMapFile=${project.buildDir}/resources/main/mixins.techgunssoundfix.refmap.json"
+    ]
 }
 
 // This task creates a .jar file containing the source code of this mod.

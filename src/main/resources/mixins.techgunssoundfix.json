@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.pluslatte.techgunssoundfix.mixins",
+  "refmap": "mixins.techgunssoundfix.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinTGSound"
+  ],
+  "client": [
+  ],
+  "server": [
+  ]
+}
