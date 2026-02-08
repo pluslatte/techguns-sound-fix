@@ -1,7 +1,5 @@
 package com.pluslatte.techgunssoundfix.mixins;
 
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -18,9 +16,7 @@ import java.util.Map;
 public class TechgunsSoundFixMixinPlugin implements IFMLLoadingPlugin {
 
     public TechgunsSoundFixMixinPlugin() {
-        MixinBootstrap.init();
         Mixins.addConfiguration("mixins.techgunssoundfix.json");
-        MixinEnvironment.getDefaultEnvironment().setObfuscationContext("searge");
     }
 
     @Override
