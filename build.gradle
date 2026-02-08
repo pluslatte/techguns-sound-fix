@@ -49,9 +49,10 @@ repositories {
 
 dependencies {
     // UniMix for mixin support in 1.7.10
-    // UniMix provides Mixin 0.8.7 and includes all necessary transitive dependencies
-    implementation("com.github.LegacyModdingMC:UniMix:0.15.5")
-    annotationProcessor("com.github.LegacyModdingMC:UniMix:0.15.5")
+    // UniMix provides Mixin 0.8 and includes all necessary transitive dependencies
+    // Correct Maven coordinates: io.github.legacymoddingmc:unimix (lowercase)
+    implementation("io.github.legacymoddingmc:unimix:0.15.4")
+    annotationProcessor("io.github.legacymoddingmc:unimix:0.15.4")
     
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..

@@ -81,7 +81,7 @@ src/main/
 
 - **Minecraft**: 1.7.10
 - **Forge**: 10.13.4.1614-1.7.10
-- **UniMix**: 0.15.5 (provides Mixin 0.8.7)
+- **UniMix**: 0.15.4 (provides Mixin 0.8)
 - **Techguns**: Runtime dependency (not required for compilation)
 
 ## Testing Strategy

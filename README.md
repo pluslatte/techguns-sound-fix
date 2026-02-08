@@ -17,7 +17,7 @@ This mod uses **UniMixins** to patch the angle parameter in the `polarOffsetXZ` 
 - **Minecraft**: 1.7.10
 - **Forge**: 10.13.4.1614-1.7.10
 - **Dependencies**: Techguns (any version)
-- **Mixin Library**: UniMix 0.15.5
+- **Mixin Library**: UniMix 0.15.4
 
 ## Installation
 
