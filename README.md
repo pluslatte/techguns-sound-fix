@@ -16,15 +16,18 @@ This mod uses **UniMixins** to patch the angle parameter in the `polarOffsetXZ` 
 
 - **Minecraft**: 1.7.10
 - **Forge**: 10.13.4.1614-1.7.10
-- **Dependencies**: Techguns (any version)
-- **Mixin Library**: UniMix 0.15.4
+- **Dependencies**: 
+  - Techguns (any version)
+  - UniMixins or GTNHMixins (required at runtime)
+- **Mixin Library**: GTNHMixins (development dependency)
 
 ## Installation
 
 1. Download the latest release from [Releases](https://github.com/pluslatte/techguns-sound-fix/releases)
-2. Place `techgunsfix-1.0.0.jar` in your Minecraft `mods` folder
-3. Ensure Techguns MOD is also installed
-4. Launch Minecraft
+2. Install [UniMixins](https://modrinth.com/mod/unimixins) or [GTNHMixins](https://github.com/GTNewHorizons/GTNHMixins) (required dependency)
+3. Place `techgunsfix-1.0.0.jar` in your Minecraft `mods` folder
+4. Ensure Techguns MOD is also installed
+5. Launch Minecraft
 
 ## Building from Source
 

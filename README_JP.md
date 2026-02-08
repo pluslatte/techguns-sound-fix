@@ -23,8 +23,10 @@ Minecraftの座標系に合わせます。
 
 - **Minecraft バージョン**: 1.7.10
 - **Forge バージョン**: 10.13.4.1614-1.7.10
-- **依存MOD**: Techguns（任意のバージョン）
-- **Mixinライブラリ**: UniMix 0.15.4
+- **依存MOD**: 
+  - Techguns（任意のバージョン）
+  - UniMixins または GTNHMixins（実行時に必須）
+- **Mixinライブラリ**: GTNHMixins（開発時の依存関係）
 
 ## ビルド方法
 
@@ -48,10 +50,11 @@ cd techguns-sound-fix
 
 ## インストール方法
 
-1. ビルドで生成された `techgunsfix-1.0.0.jar` を取得
-2. Minecraftの`mods`フォルダに配置
-3. Techguns MODも同時に導入されていることを確認
-4. Minecraftを起動
+1. [UniMixins](https://modrinth.com/mod/unimixins) または [GTNHMixins](https://github.com/GTNewHorizons/GTNHMixins) をインストール（必須の依存関係）
+2. ビルドで生成された `techgunsfix-1.0.0.jar` を取得
+3. Minecraftの`mods`フォルダに配置
+4. Techguns MODも同時に導入されていることを確認
+5. Minecraftを起動
 
 ## 使用方法
 

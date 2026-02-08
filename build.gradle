@@ -45,14 +45,18 @@ repositories {
         name = "CleanroomMC"
         url = "https://maven.cleanroommc.com"
     }
+    maven {
+        name = "GTNH"
+        url = "https://nexus.gtnewhorizons.com/repository/public/"
+    }
 }
 
 dependencies {
     // UniMix for mixin support in 1.7.10
-    // UniMix provides Mixin 0.8 and includes all necessary transitive dependencies
-    // Correct Maven coordinates: io.github.legacymoddingmc:unimix (lowercase)
-    implementation("io.github.legacymoddingmc:unimix:0.15.4")
-    annotationProcessor("io.github.legacymoddingmc:unimix:0.15.4")
+    // Note: UniMix classes are provided at runtime by the UniMixins mod
+    // The Mixin library must be available at compile time but is provided at runtime
+    // Users need to install UniMixins mod separately: https://modrinth.com/mod/unimixins
+    compileOnly("com.github.GTNewHorizons:gtnhmixins:2.2.1:dev")
     
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..

@@ -2,15 +2,15 @@
 {
   "modid": "techgunsfix",
   "name": "Techguns Audio Fix",
-  "description": "Fixes the gun sound position offset issue in Techguns MOD where sounds are shifted to the left.",
+  "description": "Fixes the gun sound position offset issue in Techguns MOD where sounds are shifted to the left. Requires UniMixins or GTNHMixins.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://github.com/pluslatte/techguns-sound-fix",
   "updateUrl": "",
   "authorList": ["pluslatte"],
-  "credits": "Based on UniMixins by LegacyModdingMC",
+  "credits": "Uses Mixin framework from UniMixins/GTNHMixins",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": ["techguns"]
+  "dependencies": ["required-after:techguns"]
 }
 ]
