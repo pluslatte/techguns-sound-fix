@@ -38,18 +38,19 @@ We use **UniMixins** to inject bytecode modifications at runtime:
     remap = false
 )
 private double fixGunSoundAngle(double angle) {
-    return angle - Math.PI / 2.0;  // Rotate 90 degrees clockwise
+    return angle - Math.PI / 2.0;  // Compensate for 90° coordinate system offset
 }
 ```
 
 ### Why This Works
 
 Original: `polarOffsetXZ(x, z, radius, yawAngle)`
-- yawAngle is directly from entity's rotation
+- yawAngle is directly from entity's rotation (Minecraft coordinate system)
+- polarOffsetXZ expects standard polar coordinates (0° = East)
 - Results in 90° counterclockwise offset
 
 Fixed: `polarOffsetXZ(x, z, radius, yawAngle - π/2)`
-- Compensates for coordinate system difference
+- Converts Minecraft's yaw (0° = South) to polar angle (0° = East)
 - Sound now appears in correct position
 
 ## Architecture

@@ -41,7 +41,7 @@ public class MixinTGSound {
         remap = false
     )
     private double fixGunSoundAngle(double angle) {
-        // Subtract π/2 to convert from Minecraft coordinate system to standard polar coordinates
+        // Subtract π/2 to compensate for Minecraft's coordinate system where yaw=0° is South instead of East
         return angle - Math.PI / 2.0;
     }
 }
