@@ -1,16 +1,16 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "techgunsfix",
+  "name": "Techguns Audio Fix",
+  "description": "Fixes the gun sound position offset issue in Techguns MOD where sounds are shifted to the left.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/pluslatte/techguns-sound-fix",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authorList": ["pluslatte"],
+  "credits": "Based on UniMixins by LegacyModdingMC",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": []
+  "dependencies": ["techguns"]
 }
 ]

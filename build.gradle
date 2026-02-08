@@ -5,6 +5,10 @@ buildscript {
             name = "forge"
             url = "https://maven.minecraftforge.net/"
         }
+        maven {
+            name = "CleanroomMC"
+            url = "https://maven.cleanroommc.com"
+        }
     }
     dependencies {
         classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {
@@ -32,7 +36,21 @@ minecraft {
     runDir = "run"
 }
 
+repositories {
+    maven {
+        name = "CleanroomMC"
+        url = "https://maven.cleanroommc.com"
+    }
+}
+
 dependencies {
+    // UniMixins for mixin support in 1.7.10
+    implementation("com.github.LegacyModdingMC:UniMix:0.15.5")
+    annotationProcessor("org.ow2.asm:asm-debug-all:5.2")
+    annotationProcessor("com.google.guava:guava:24.1.1-jre")
+    annotationProcessor("com.google.code.gson:gson:2.8.6")
+    annotationProcessor("com.github.LegacyModdingMC:UniMix:0.15.5")
+    
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -62,6 +80,13 @@ processResources {
 // Ensures that the encoding of source files is set to UTF-8, see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+// Add the MANIFEST.MF to the JAR
+jar {
+    manifest {
+        from(sourceSets.main.output.resourcesDir.path + '/META-INF/MANIFEST.MF')
+    }
 }
 
 // This task creates a .jar file containing the source code of this mod.
