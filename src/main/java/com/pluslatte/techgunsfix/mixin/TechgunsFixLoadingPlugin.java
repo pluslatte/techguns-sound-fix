@@ -1,6 +1,8 @@
 package com.pluslatte.techgunsfix.mixin;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.Map;
@@ -12,13 +14,20 @@ public class TechgunsFixLoadingPlugin implements IFMLLoadingPlugin {
     /**
      * Constructor called by FML during CoreMod loading phase, before mod initialization.
      * 
-     * Registers our mixin configuration with the Mixin framework.
-     * Note: MixinBootstrap.init() should NOT be called here when using UniMixins,
-     * as UniMixins handles Mixin initialization. Calling it again causes classloader conflicts.
+     * Ensures Mixin framework is initialized and registers our mixin configuration.
+     * Handles both scenarios: with and without UniMixins pre-installed.
      */
     public TechgunsFixLoadingPlugin() {
-        // Only register our mixin configuration file
-        // UniMixins (if present) has already initialized MixinBootstrap
+        // Check if MixinBootstrap has already been initialized (e.g., by UniMixins)
+        // If not, initialize it ourselves
+        try {
+            MixinEnvironment.getCurrentEnvironment();
+        } catch (Exception e) {
+            // MixinBootstrap not yet initialized, initialize it now
+            MixinBootstrap.init();
+        }
+        
+        // Register our mixin configuration file
         Mixins.addConfiguration("mixins.techgunsfix.json");
     }
 
