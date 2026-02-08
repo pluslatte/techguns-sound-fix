@@ -89,7 +89,7 @@ tasks.withType(JavaCompile) {
 // Add the MANIFEST.MF to the JAR
 jar {
     manifest {
-        from(sourceSets.main.output.resourcesDir.path + '/META-INF/MANIFEST.MF')
+        from file("${sourceSets.main.output.resourcesDir}/META-INF/MANIFEST.MF")
     }
 }
 

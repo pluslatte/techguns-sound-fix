@@ -6,7 +6,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = TechgunsFixMod.MODID, name = TechgunsFixMod.NAME, version = TechgunsFixMod.VERSION, dependencies = "after:techguns")
+@Mod(modid = TechgunsFixMod.MODID, name = TechgunsFixMod.NAME, version = TechgunsFixMod.VERSION, dependencies = "required-after:techguns")
 public class TechgunsFixMod {
     public static final String MODID = "techgunsfix";
     public static final String NAME = "Techguns Audio Fix";
