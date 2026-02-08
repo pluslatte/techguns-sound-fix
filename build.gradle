@@ -49,10 +49,8 @@ repositories {
 
 dependencies {
     // UniMixins for mixin support in 1.7.10
+    // UniMix provides Mixin 0.8.7 and includes all necessary transitive dependencies
     implementation("com.github.LegacyModdingMC:UniMix:0.15.5")
-    annotationProcessor("org.ow2.asm:asm-debug-all:5.2")
-    annotationProcessor("com.google.guava:guava:24.1.1-jre")
-    annotationProcessor("com.google.code.gson:gson:2.8.6")
     annotationProcessor("com.github.LegacyModdingMC:UniMix:0.15.5")
     
     // you may put jars on which you depend on in ./libs
