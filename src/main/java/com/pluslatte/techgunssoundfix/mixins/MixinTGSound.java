@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import techguns.client.audio.TGSound;
 
 /**
  * Mixin to fix TGSound positioning issue in Techguns mod.
@@ -17,25 +18,25 @@ import org.spongepowered.asm.mixin.injection.Redirect;
  * 
  * This mixin adjusts the yaw angle calculation to correct the sound position.
  */
-@Mixin(targets = "techguns.client.audio.TGSound", remap = false)
+@Mixin(value = TGSound.class, remap = false)
 public abstract class MixinTGSound {
 
     @Shadow(remap = false)
-    private float field_147660_d; // x position
+    protected float xPosF; // x position
 
     @Shadow(remap = false)
-    private float field_147658_f; // z position
+    protected float zPosF; // z position
 
     /**
      * Modifies the yaw angle passed to polarOffsetXZ to correct the coordinate
      * system mismatch.
      * 
-     * The polarOffsetXZ function is called around line 23-28 in TGSound:
+     * The polarOffsetXZ function is called in TGSound.func_73660_a (update method):
      * MathUtil.Vec2 pos = MathUtil.polarOffsetXZ(
-     * (double)this.field_147660_d,
-     * (double)this.field_147658_f,
+     * (double)this.xPosF,
+     * (double)this.zPosF,
      * 1.0,
-     * (double)((EntityLivingBase)entity).field_70759_as * Math.PI / 180.0
+     * (double)((EntityLivingBase)entity).renderYawOffset * Math.PI / 180.0
      * );
      * 
      * We need to adjust the angle to account for:
@@ -47,7 +48,7 @@ public abstract class MixinTGSound {
      * The transformation: adjusted_angle = -(yaw - 90°) = -yaw + 90° = 90° - yaw
      * In radians: adjusted_angle = π/2 - yaw_radians
      */
-    @Redirect(method = "update", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
+    @Redirect(method = "func_73660_a", at = @At(value = "INVOKE", target = "Ltechguns/util/MathUtil;polarOffsetXZ(DDDD)Ltechguns/util/MathUtil$Vec2;", remap = false), remap = false, require = 1)
     private Object redirectPolarOffsetXZ(double x, double z, double radius, double angle) {
         // Adjust the angle to convert from Minecraft coordinates to polar coordinates
         // Original: yaw * PI / 180

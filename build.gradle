@@ -44,6 +44,9 @@ repositories {
 }
 
 dependencies {
+    // Techguns mod (compile時のみ必要、実行時はmodsフォルダから読み込まれる)
+    compileOnly files('libs/Techguns.beta.1.2_alphatest4.1.jar')
+    
     // UniMixins dependencies for Mixin support
     def unimixinsVersion = "0.2.1"
     implementation("com.github.LegacyModdingMC.UniMixins:unimixins-all-1.7.10:${unimixinsVersion}:dev") {
