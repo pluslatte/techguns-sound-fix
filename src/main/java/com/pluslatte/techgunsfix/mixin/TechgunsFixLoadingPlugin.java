@@ -10,9 +10,16 @@ import java.util.Map;
 @IFMLLoadingPlugin.Name("TechgunsFixCore")
 public class TechgunsFixLoadingPlugin implements IFMLLoadingPlugin {
 
+    /**
+     * Constructor called by FML during CoreMod loading phase, before mod initialization.
+     * 
+     * This initializes the Mixin framework and registers our mixin configuration.
+     * The order is critical: MixinBootstrap.init() must be called before addConfiguration().
+     */
     public TechgunsFixLoadingPlugin() {
-        // Initialize Mixin
+        // Initialize the Mixin framework
         MixinBootstrap.init();
+        // Register our mixin configuration file
         Mixins.addConfiguration("mixins.techgunsfix.json");
     }
 
