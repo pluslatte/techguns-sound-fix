@@ -21,12 +21,6 @@ import techguns.client.audio.TGSound;
 @Mixin(value = TGSound.class, remap = false)
 public abstract class MixinTGSound {
 
-    @Shadow(remap = false)
-    protected float xPosF; // x position
-
-    @Shadow(remap = false)
-    protected float zPosF; // z position
-
     /**
      * Modifies the yaw angle passed to polarOffsetXZ to correct the coordinate
      * system mismatch.
